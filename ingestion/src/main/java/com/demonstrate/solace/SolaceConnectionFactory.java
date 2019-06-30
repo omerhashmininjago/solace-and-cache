@@ -29,12 +29,12 @@ public class SolaceConnectionFactory extends SolaceJcsmpConnectionFactoryStrateg
     }
 
     @Override
-    public void initializeAcknowledgementScheme() {
+    protected void initializeAcknowledgementScheme() {
         //TO DO
     }
 
     @Override
-    public void initializeSslScheme() {
+    protected void initializeSslScheme() {
         //TO DO
     }
 }

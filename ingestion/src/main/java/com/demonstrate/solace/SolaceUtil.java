@@ -1,10 +1,7 @@
 package com.demonstrate.solace;
 
 import com.demonstrate.error.SolaceConnectionException;
-import com.solacesystems.jcsmp.CacheSession;
-import com.solacesystems.jcsmp.CacheSessionProperties;
-import com.solacesystems.jcsmp.JCSMPException;
-import com.solacesystems.jcsmp.Session;
+import com.solacesystems.jcsmp.*;
 import com.solacesystems.jcsmp.transaction.TransactedSession;
 import com.solacesystems.jcsmp.transaction.xa.XASession;
 import org.slf4j.Logger;
@@ -21,12 +18,12 @@ public class SolaceUtil {
     @Autowired
     private SolaceConnectionFactory solaceConnectionFactory;
 
-    public void initializeConnection() throws SolaceConnectionException {
+    public void initializeConnection(JCSMPSession jcsmpSession) throws SolaceConnectionException {
         int retry = RETRY_CONNECTION;
         while (true) {
             retry--;
             try {
-                solaceConnectionFactory.getSolaceSession().connect();
+                jcsmpSession.connect();
                 break;
             } catch (JCSMPException e) {
                 if (retry == 0) {
@@ -61,6 +58,19 @@ public class SolaceUtil {
         } catch (JCSMPException e) {
             throw new SolaceConnectionException(e);
         }
+    }
+
+    public void addSubscription(String destination, JCSMPSession jcsmpSession) throws SolaceConnectionException {
+        final Topic topic = JCSMPFactory.onlyInstance().createTopic(destination);
+        try {
+            jcsmpSession.addSubscription(topic);
+        } catch (JCSMPException e) {
+            throw new SolaceConnectionException(e);
+        }
+    }
+
+    public SolaceConnectionFactory getSolaceConnectionFactory() {
+        return solaceConnectionFactory;
     }
 
 }
