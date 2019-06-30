@@ -1,7 +1,6 @@
 package com.demonstrate.solace;
 
 import com.demonstrate.error.SolaceConnectionException;
-import com.google.common.base.Preconditions;
 import com.solacesystems.jcsmp.InvalidPropertiesException;
 import com.solacesystems.jcsmp.JCSMPFactory;
 import com.solacesystems.jcsmp.JCSMPProperties;
