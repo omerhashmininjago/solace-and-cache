@@ -19,7 +19,7 @@ public class SolaceConnectionFactory extends SolaceJcsmpConnectionFactoryStrateg
     @Value("${solace.password}")
     private String solacePassword;
 
-    public SolaceConnectionFactory(String solaceHost, String solaceVpn, String solaceUsername, String solacePassword, JCSMPProperties properties) {
+    public SolaceConnectionFactory(String solaceHost, String solaceVpn, String solaceUsername, String solacePassword) {
         super(solaceHost, solaceVpn, solaceUsername, solacePassword);
     }
 
