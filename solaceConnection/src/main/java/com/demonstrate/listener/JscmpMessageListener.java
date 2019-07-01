@@ -15,13 +15,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Callable;
 
 import static com.solacesystems.jcsmp.EndpointProperties.ACCESSTYPE_EXCLUSIVE;
 import static com.solacesystems.jcsmp.EndpointProperties.PERMISSION_CONSUME;
 import static com.solacesystems.jcsmp.JCSMPProperties.SUPPORTED_MESSAGE_ACK_CLIENT;
 import static com.solacesystems.jcsmp.JCSMPSession.FLAG_IGNORE_ALREADY_EXISTS;
 
-public abstract class JscmpMessageListener {
+public abstract class JscmpMessageListener<T> implements Callable {
 
     private static final Logger LOG = LoggerFactory.getLogger(JscmpMessageListener.class);
     private final String destination;
@@ -42,17 +43,19 @@ public abstract class JscmpMessageListener {
         this.blockingQueue = blockingQueue;
     }
 
-    public void listen() throws SolaceConnectionException {
+    public T call() throws SolaceConnectionException {
         getSession();
         initializeSession(jcsmpSession);
         provisionQueue(destination, jcsmpSession);
         createBind(destination);
         getEndpointProperties();
         consumeMessages(jcsmpSession, flowProperties, endpointProperties);
+        return null;
     }
 
     /**
      * Get Session
+     *
      * @throws SolaceConnectionException
      */
     public abstract void getSession() throws SolaceConnectionException;
@@ -132,7 +135,7 @@ public abstract class JscmpMessageListener {
     }
 
     /**
-     * Create a Flow be able to bind to and consume messages from the Queue.
+     * Create a Flow be able to bind to and consumer messages from the Queue.
      *
      * @param destination
      */
@@ -155,7 +158,7 @@ public abstract class JscmpMessageListener {
     }
 
     /**
-     * set queue permissions to "consume" and access-type to "exclusive"
+     * set queue permissions to "consumer" and access-type to "exclusive"
      *
      * @return endpointProps
      */
@@ -165,4 +168,10 @@ public abstract class JscmpMessageListener {
         endpointProps.setAccessType(ACCESSTYPE_EXCLUSIVE);
         return endpointProps;
     }
+
+    /**
+     *
+     */
+    public abstract void onExecute();
+
 }
