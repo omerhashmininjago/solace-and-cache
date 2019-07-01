@@ -1,22 +1,22 @@
-package com.demonstrate.solace;
+package com.demonstrate.solace.util;
 
 import com.demonstrate.error.SolaceConnectionException;
-import com.solacesystems.jcsmp.*;
-import com.solacesystems.jcsmp.transaction.TransactedSession;
-import com.solacesystems.jcsmp.transaction.xa.XASession;
+import com.demonstrate.solace.connection.SolaceConnectionStrategy;
+import com.solacesystems.jcsmp.JCSMPException;
+import com.solacesystems.jcsmp.JCSMPSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SolaceUtil {
+public class SolaceJscmpUtil {
 
-    private final static Logger LOG = LoggerFactory.getLogger(SolaceUtil.class);
+    private final static Logger LOG = LoggerFactory.getLogger(SolaceJscmpUtil.class);
     private final static int RETRY_CONNECTION = 3;
 
     @Autowired
-    private SolaceConnectionFactory solaceConnectionFactory;
+    private SolaceConnectionStrategy solaceConnectionFactory;
 
     public void initializeConnection(JCSMPSession jcsmpSession) throws SolaceConnectionException {
         int retry = RETRY_CONNECTION;
@@ -34,7 +34,7 @@ public class SolaceUtil {
         }
     }
 
-    public CacheSession startCacheSession() throws SolaceConnectionException {
+  /*  public CacheSession startCacheSession() throws SolaceConnectionException {
         CacheSessionProperties cacheSessionProperties = new CacheSessionProperties("cacheName", 10000, 10, 1000);
 
         try {
@@ -58,19 +58,9 @@ public class SolaceUtil {
         } catch (JCSMPException e) {
             throw new SolaceConnectionException(e);
         }
-    }
+    }*/
 
-    public void addSubscription(String destination, JCSMPSession jcsmpSession) throws SolaceConnectionException {
-        final Topic topic = JCSMPFactory.onlyInstance().createTopic(destination);
-        try {
-            jcsmpSession.addSubscription(topic);
-        } catch (JCSMPException e) {
-            throw new SolaceConnectionException(e);
-        }
-    }
-
-    public SolaceConnectionFactory getSolaceConnectionFactory() {
+    public SolaceConnectionStrategy getSolaceConnectionFactory() {
         return solaceConnectionFactory;
     }
-
 }

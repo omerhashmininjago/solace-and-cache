@@ -1,72 +1,44 @@
 package com.demonstrate.ingestion;
 
 import com.demonstrate.error.SolaceConnectionException;
-import com.demonstrate.solace.SolaceUtil;
-import com.solacesystems.jcsmp.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.demonstrate.listener.JscmpMessageListener;
+import com.demonstrate.solace.util.SolaceJscmpUtil;
+import com.solacesystems.jcsmp.JCSMPSession;
+import com.solacesystems.jcsmp.XMLMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component
-public class MessageListener {
+import java.util.concurrent.BlockingQueue;
 
-    private static final Logger LOG = LoggerFactory.getLogger(MessageListener.class);
-    private final String destination;
-    private final boolean isTransacted;
-    private final boolean isXaTransacted;
-    private final boolean isCacheTransacted;
+@Component
+public class MessageListener extends JscmpMessageListener {
 
     @Autowired
-    private SolaceUtil solaceUtil;
+    private SolaceJscmpUtil solaceJscmpUtil;
 
-    public MessageListener(String destination, boolean isTransacted, boolean isXaTransacted, boolean isCacheTransacted) {
-        this.destination = destination;
-        this.isTransacted = isTransacted;
-        this.isXaTransacted = isXaTransacted;
-        this.isCacheTransacted = isCacheTransacted;
+    public MessageListener(String destination, boolean isTransacted, boolean isXaTransacted, boolean isCacheTransacted, BlockingQueue<XMLMessage> blockingQueue) {
+        super(destination, isTransacted, isXaTransacted, isCacheTransacted, blockingQueue);
     }
 
-    public void listen() throws SolaceConnectionException {
+    /**
+     * Get Session
+     *
+     * @throws SolaceConnectionException
+     */
+    @Override
+    public void getSession() throws SolaceConnectionException {
+        jcsmpSession = (JCSMPSession) solaceJscmpUtil.getSolaceConnectionFactory().getSolaceSession();
+    }
 
-        JCSMPSession jcsmpSession = solaceUtil.getSolaceConnectionFactory().getSolaceSession();
-        solaceUtil.initializeConnection(jcsmpSession);
-
-        XMLMessageConsumer cons = null;
-        try {
-            cons = jcsmpSession.getMessageConsumer(new XMLMessageListener() {
-
-                @Override
-                public void onReceive(BytesXMLMessage msg) {
-                    if (msg instanceof TextMessage) {
-                        LOG.trace("TextMessage received: {}",
-                                ((TextMessage) msg).getText());
-                    } else {
-                        LOG.trace("Message received.");
-                    }
-                    LOG.trace("Message Dump: {}", msg.dump());
-                }
-
-                @Override
-                public void onException(JCSMPException e) {
-                    System.out.printf("Consumer received exception: %s%n", e);
-                }
-            });
-            solaceUtil.addSubscription(destination, jcsmpSession);
-            cons.start();
-        } catch (JCSMPException e) {
-            throw new SolaceConnectionException(e);
-        } finally {
-            if (cons != null) {
-                cons.stop();
-                cons.close();
-            }
-            if (jcsmpSession != null && !jcsmpSession.isClosed()) {
-                jcsmpSession.closeSession();
-            }
-        }
-
-
+    /**
+     * Initializing the session
+     *
+     * @param jcsmpSession
+     * @throws SolaceConnectionException
+     */
+    @Override
+    public void initializeSession(JCSMPSession jcsmpSession) throws SolaceConnectionException {
+        solaceJscmpUtil.initializeConnection(jcsmpSession);
     }
 
 }

@@ -1,8 +1,9 @@
-package com.demonstrate.solace;
+package com.demonstrate.solace.connection;
 
 import com.demonstrate.error.SolaceConnectionException;
 import com.google.common.base.Preconditions;
 
+@FunctionalInterface
 public interface SolaceConnectionStrategy<T> {
 
     T getSolaceSession() throws SolaceConnectionException;

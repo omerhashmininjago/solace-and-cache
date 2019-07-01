@@ -1,4 +1,4 @@
-package com.demonstrate.solace;
+package com.demonstrate.solace.connection;
 
 import com.demonstrate.error.SolaceConnectionException;
 import com.solacesystems.jms.SolConnectionFactory;
