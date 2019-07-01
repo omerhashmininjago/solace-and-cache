@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.demonstrate.java</groupId>
-    <artifactId>cache</artifactId>
+    <artifactId>solace-and-cache</artifactId>
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>solaceConnection</module>

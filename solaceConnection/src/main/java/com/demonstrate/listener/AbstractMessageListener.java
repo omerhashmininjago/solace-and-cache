@@ -9,48 +9,41 @@ import com.solacesystems.jcsmp.JCSMPException;
 import com.solacesystems.jcsmp.JCSMPFactory;
 import com.solacesystems.jcsmp.JCSMPSession;
 import com.solacesystems.jcsmp.Queue;
-import com.solacesystems.jcsmp.XMLMessage;
 import com.solacesystems.jcsmp.XMLMessageListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Callable;
 
 import static com.solacesystems.jcsmp.EndpointProperties.ACCESSTYPE_EXCLUSIVE;
 import static com.solacesystems.jcsmp.EndpointProperties.PERMISSION_CONSUME;
 import static com.solacesystems.jcsmp.JCSMPProperties.SUPPORTED_MESSAGE_ACK_CLIENT;
 import static com.solacesystems.jcsmp.JCSMPSession.FLAG_IGNORE_ALREADY_EXISTS;
 
-public abstract class JscmpMessageListener<T> implements Callable {
+public abstract class AbstractMessageListener {
 
-    private static final Logger LOG = LoggerFactory.getLogger(JscmpMessageListener.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractMessageListener.class);
     private final String destination;
     private final boolean isTransacted;
     private final boolean isXaTransacted;
     private final boolean isCacheTransacted;
-    private final BlockingQueue<XMLMessage> blockingQueue;
     private EndpointProperties endpointProperties;
     private ConsumerFlowProperties flowProperties;
     private EndpointProperties endpointProps;
     protected JCSMPSession jcsmpSession;
 
-    public JscmpMessageListener(String destination, boolean isTransacted, boolean isXaTransacted, boolean isCacheTransacted, BlockingQueue<XMLMessage> blockingQueue) {
+    public AbstractMessageListener(String destination, boolean isTransacted, boolean isXaTransacted, boolean isCacheTransacted) {
         this.destination = destination;
         this.isTransacted = isTransacted;
         this.isXaTransacted = isXaTransacted;
         this.isCacheTransacted = isCacheTransacted;
-        this.blockingQueue = blockingQueue;
     }
 
-    public T call() throws SolaceConnectionException {
+    public void listen() throws SolaceConnectionException {
         getSession();
         initializeSession(jcsmpSession);
         provisionQueue(destination, jcsmpSession);
         createBind(destination);
         getEndpointProperties();
-        consumeMessages(jcsmpSession, flowProperties, endpointProperties);
-        return null;
+        monitorQueue(jcsmpSession, flowProperties, endpointProperties);
     }
 
     /**
@@ -76,20 +69,15 @@ public abstract class JscmpMessageListener<T> implements Callable {
      * @param endpointProperties
      * @throws SolaceConnectionException
      */
-    public void consumeMessages(JCSMPSession jcsmpSession, ConsumerFlowProperties flowProperties, EndpointProperties endpointProperties) throws SolaceConnectionException {
+    public void monitorQueue(JCSMPSession jcsmpSession, ConsumerFlowProperties flowProperties, EndpointProperties endpointProperties) throws SolaceConnectionException {
         FlowReceiver cons = null;
         while (true) {
             try {
                 cons = jcsmpSession.createFlow(new XMLMessageListener() {
                     @Override
                     public void onReceive(BytesXMLMessage msg) {
-                        try {
-                            blockingQueue.put(msg);
-                        } catch (InterruptedException e) {
-                            Thread.interrupted();
-                        }
+                        consumeMessage();
                         LOG.trace("Message Dump:%n%s%n", msg.dump());
-
                         // When the ack mode is set to SUPPORTED_MESSAGE_ACK_CLIENT,
                         // guaranteed delivery messages are acknowledged after
                         // processing
@@ -104,14 +92,11 @@ public abstract class JscmpMessageListener<T> implements Callable {
 
                 cons.start();
             } catch (JCSMPException e) {
-                throw new SolaceConnectionException(e);
+                // ToDo
             } finally {
                 if (cons != null) {
                     cons.stop();
                     cons.close();
-                }
-                if (jcsmpSession != null && !jcsmpSession.isClosed()) {
-                    jcsmpSession.closeSession();
                 }
             }
         }
@@ -173,5 +158,10 @@ public abstract class JscmpMessageListener<T> implements Callable {
      *
      */
     public abstract void onExecute();
+
+    /**
+     * Give an implementation of how the message is to be consumed
+     */
+    public abstract void consumeMessage();
 
 }

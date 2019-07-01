@@ -1,7 +1,7 @@
 package com.demonstrate.ingestion;
 
 import com.demonstrate.error.SolaceConnectionException;
-import com.demonstrate.listener.JscmpMessageListener;
+import com.demonstrate.listener.AbstractMessageListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class MessageInboundAdaptor {
 
     @Autowired
-    JscmpMessageListener messageListener;
+    AbstractMessageListener messageListener;
 
     public void readQueue() throws SolaceConnectionException {
         messageListener.onExecute();

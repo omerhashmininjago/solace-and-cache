@@ -1,20 +1,19 @@
 package com.demonstrate.ingestion;
 
 import com.demonstrate.error.SolaceConnectionException;
-import com.demonstrate.listener.JscmpMessageListener;
+import com.demonstrate.listener.AbstractMessageListener;
 import com.demonstrate.solace.util.SolaceJscmpUtil;
 import com.solacesystems.jcsmp.JCSMPSession;
-import com.solacesystems.jcsmp.XMLMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Component
-public class MessageListener extends JscmpMessageListener {
+public class MessageListener<T> extends AbstractMessageListener implements Callable {
 
     @Value("")
     private int concurrentConsumers;
@@ -31,13 +30,11 @@ public class MessageListener extends JscmpMessageListener {
     @Value("")
     private boolean isCacheTransacted;
 
-    private BlockingQueue<XMLMessage> blockingQueue;
-
     @Autowired
     private SolaceJscmpUtil solaceJscmpUtil;
 
-    public MessageListener(String destination, boolean isTransacted, boolean isXaTransacted, boolean isCacheTransacted, BlockingQueue<XMLMessage> blockingQueue) {
-        super(destination, isTransacted, isXaTransacted, isCacheTransacted, blockingQueue);
+    public MessageListener(String destination, boolean isTransacted, boolean isXaTransacted, boolean isCacheTransacted) {
+        super(destination, isTransacted, isXaTransacted, isCacheTransacted);
     }
 
     /**
@@ -74,4 +71,15 @@ public class MessageListener extends JscmpMessageListener {
         solaceJscmpUtil.initializeConnection(jcsmpSession);
     }
 
+    @Override
+    public void consumeMessage() {
+
+        // ToDo :: Load data in Cache
+    }
+
+    @Override
+    public Object call() throws Exception {
+        listen();
+        return null;
+    }
 }
