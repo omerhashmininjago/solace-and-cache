@@ -10,11 +10,16 @@
 
     <parent>
         <groupId>com.demonstrate.java</groupId>
-        <artifactId>cache</artifactId>
+        <artifactId>solace-and-cache</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
     <dependencies>
+        <dependency>
+            <groupId>com.demonstrate.java</groupId>
+            <artifactId>cache-loader</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
         <dependency>
             <groupId>com.demonstrate.java</groupId>
             <artifactId>solace-connection</artifactId>

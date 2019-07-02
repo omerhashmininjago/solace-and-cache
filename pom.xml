@@ -10,6 +10,7 @@
         <module>ingestion</module>
         <module>persistence</module>
         <module>exceptionHandling</module>
+        <module>cacheLoader</module>
     </modules>
 
     <packaging>pom</packaging>
@@ -34,7 +35,7 @@
         <solace.version>[10,)</solace.version>
         <apace.commons.lang3.version>3.0</apace.commons.lang3.version>
         <apace.commons.dbcp2.version>2.1</apace.commons.dbcp2.version>
-        <google.guava.version>10.0.1</google.guava.version>
+        <google.guava.version>26.0-jre</google.guava.version>
         <google.collections.version>1.0-rc2</google.collections.version>
     </properties>
 
