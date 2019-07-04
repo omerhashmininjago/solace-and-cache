@@ -26,7 +26,7 @@ public class Trade {
 
     @Column(name = "TRADE_STATUS")
     @Enumerated(EnumType.STRING)
-    private String tradeStatus;
+    private TradeStatusType tradeStatus;
 
     @Column(name = "TRADE_VAL_DATE")
     private LocalDate tradeValueDate;

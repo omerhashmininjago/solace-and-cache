@@ -60,5 +60,4 @@ public class TradeCacheUtil {
         tradeCache.invalidateAll();
         initCache();
     }
-
 }
