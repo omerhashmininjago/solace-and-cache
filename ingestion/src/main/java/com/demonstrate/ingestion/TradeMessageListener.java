@@ -12,14 +12,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import static com.demonstrate.transformer.MessageToPayloadTransformer.MESSAGE_TO_PAYLOAD_TRANSFORMER;
 
 @Component
-public class TradeMessageListener<T> extends AbstractMessageListener implements Callable {
+public class TradeMessageListener extends AbstractMessageListener implements Callable {
 
     @Value("")
     private int concurrentConsumers;
@@ -54,9 +59,21 @@ public class TradeMessageListener<T> extends AbstractMessageListener implements 
 
         ExecutorService executorService = Executors.newFixedThreadPool(concurrentConsumers);
         int threadsActive = concurrentConsumers;
+        List<Future> futures = new ArrayList<>();
         while (threadsActive > 0) {
-            executorService.submit(this);
+            futures.add(executorService.submit(this));
             threadsActive--;
+
+            for (Future future : futures) {
+                try {
+                    future.get();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                } catch (ExecutionException e) {
+                    // in case a listener goes down, another listener will be triggered
+                    threadsActive++;
+                }
+            }
         }
     }
 

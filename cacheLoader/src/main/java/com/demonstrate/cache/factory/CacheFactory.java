@@ -10,7 +10,7 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
-public class CacheFactory {
+public final class CacheFactory {
 
     public static <K, V> Cache<K, Optional<V>> createCache(Function<K, V> loadMethod, @Nonnull final int maxSize, @Nonnull final long duration, @Nonnull final TimeUnit unit) {
         return CacheBuilder.newBuilder()
