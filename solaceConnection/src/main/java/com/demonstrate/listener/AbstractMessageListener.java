@@ -39,11 +39,13 @@ public abstract class AbstractMessageListener {
 
     public void listen() throws SolaceConnectionException {
         getSession();
-        initializeSession(jcsmpSession);
-        provisionQueue(destination, jcsmpSession);
+        final JCSMPSession session = jcsmpSession;
+        initializeSession(session);
+        provisionQueue(destination, session);
         createBind(destination);
         getEndpointProperties();
-        monitorQueue(jcsmpSession, flowProperties, endpointProperties);
+        monitorQueue(session, flowProperties, endpointProperties);
+        session.closeSession();
     }
 
     /**
@@ -76,7 +78,7 @@ public abstract class AbstractMessageListener {
                 cons = jcsmpSession.createFlow(new XMLMessageListener() {
                     @Override
                     public void onReceive(BytesXMLMessage msg) {
-                        consumeMessage();
+                        consumeMessage(msg);
                         LOG.trace("Message Dump:%n%s%n", msg.dump());
                         // When the ack mode is set to SUPPORTED_MESSAGE_ACK_CLIENT,
                         // guaranteed delivery messages are acknowledged after
@@ -162,6 +164,6 @@ public abstract class AbstractMessageListener {
     /**
      * Give an implementation of how the message is to be consumed
      */
-    public abstract void consumeMessage();
+    public abstract void consumeMessage(BytesXMLMessage xmlMessage);
 
 }

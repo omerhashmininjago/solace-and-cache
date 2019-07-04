@@ -1,8 +1,11 @@
 package com.demonstrate.ingestion;
 
+import com.demonstrate.domain.Trade;
 import com.demonstrate.error.SolaceConnectionException;
 import com.demonstrate.listener.AbstractMessageListener;
 import com.demonstrate.solace.util.SolaceJscmpUtil;
+import com.demonstrate.transformer.PayloadToObject;
+import com.solacesystems.jcsmp.BytesXMLMessage;
 import com.solacesystems.jcsmp.JCSMPSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,8 +15,10 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static com.demonstrate.transformer.MessageToPayloadTransformer.MESSAGE_TO_PAYLOAD_TRANSFORMER;
+
 @Component
-public class MessageListener<T> extends AbstractMessageListener implements Callable {
+public class TradeMessageListener<T> extends AbstractMessageListener implements Callable {
 
     @Value("")
     private int concurrentConsumers;
@@ -33,7 +38,7 @@ public class MessageListener<T> extends AbstractMessageListener implements Calla
     @Autowired
     private SolaceJscmpUtil solaceJscmpUtil;
 
-    public MessageListener(String destination, boolean isTransacted, boolean isXaTransacted, boolean isCacheTransacted) {
+    public TradeMessageListener(String destination, boolean isTransacted, boolean isXaTransacted, boolean isCacheTransacted) {
         super(destination, isTransacted, isXaTransacted, isCacheTransacted);
     }
 
@@ -72,9 +77,11 @@ public class MessageListener<T> extends AbstractMessageListener implements Calla
     }
 
     @Override
-    public void consumeMessage() {
-
+    public void consumeMessage(BytesXMLMessage msg) {
         // ToDo :: Load data in Cache
+
+        String payload = MESSAGE_TO_PAYLOAD_TRANSFORMER.getPayload(msg);
+        Trade trade = PayloadToObject.getObject(payload, Trade.class);
     }
 
     @Override
