@@ -17,7 +17,7 @@ public final class OptionalCacheLoader<K, V> extends CacheLoader<K, Optional<V>>
     }
 
     @Override
-    public Optional<V> load(@Nonnull final K key) throws Exception {
+    public Optional<V> load(@Nonnull final K key) {
         return Optional.ofNullable(loadMethod.apply(key));
     }
 }

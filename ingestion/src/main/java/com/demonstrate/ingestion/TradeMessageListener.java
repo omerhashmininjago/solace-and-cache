@@ -3,6 +3,7 @@ package com.demonstrate.ingestion;
 import com.demonstrate.domain.Trade;
 import com.demonstrate.error.SolaceConnectionException;
 import com.demonstrate.listener.AbstractMessageListener;
+import com.demonstrate.service.TradeService;
 import com.demonstrate.solace.util.SolaceJscmpUtil;
 import com.demonstrate.transformer.PayloadToObject;
 import com.solacesystems.jcsmp.BytesXMLMessage;
@@ -35,11 +36,15 @@ public class TradeMessageListener<T> extends AbstractMessageListener implements 
     @Value("")
     private boolean isCacheTransacted;
 
-    @Autowired
-    private SolaceJscmpUtil solaceJscmpUtil;
+    private final SolaceJscmpUtil solaceJscmpUtil;
 
-    public TradeMessageListener(String destination, boolean isTransacted, boolean isXaTransacted, boolean isCacheTransacted) {
+    private final TradeService tradeService;
+
+    @Autowired
+    public TradeMessageListener(String destination, boolean isTransacted, boolean isXaTransacted, boolean isCacheTransacted, SolaceJscmpUtil solaceJscmpUtil, TradeService tradeService) {
         super(destination, isTransacted, isXaTransacted, isCacheTransacted);
+        this.solaceJscmpUtil = solaceJscmpUtil;
+        this.tradeService = tradeService;
     }
 
     /**
@@ -78,10 +83,9 @@ public class TradeMessageListener<T> extends AbstractMessageListener implements 
 
     @Override
     public void consumeMessage(BytesXMLMessage msg) {
-        // ToDo :: Load data in Cache
-
         String payload = MESSAGE_TO_PAYLOAD_TRANSFORMER.getPayload(msg);
         Trade trade = PayloadToObject.getObject(payload, Trade.class);
+        tradeService.processTrade(trade);
     }
 
     @Override

@@ -11,7 +11,10 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
 @Component
 @EnableScheduling
@@ -27,14 +30,16 @@ public class TradeCacheUtil {
     private String timeUnit;
 
     @Autowired
-    private Cache<Long, Trade> tradeCache;
+    private Cache<Long, Optional<Trade>> tradeCache;
 
     @Autowired
     private TradeRepository tradeRepository;
 
+    private Function<Long, Trade> LOAD_TRADE = (tradeId) -> tradeRepository.findByTradeId(tradeId);
+
     @PostConstruct
     public void initCache() {
-        final Cache<Long, Trade> loadingCache = CacheFactory.createCache((tradeId) -> tradeRepository.findByTradeId(tradeId), maxSize, duration, TimeUnit.valueOf(timeUnit));
+        final Cache<Long, Optional<Trade>> loadingCache = CacheFactory.createCache(LOAD_TRADE, maxSize, duration, TimeUnit.valueOf(timeUnit));
         tradeCache = loadingCache;
     }
 
@@ -46,8 +51,8 @@ public class TradeCacheUtil {
         tradeCache.invalidate(trade);
     }
 
-    public Trade getEntry(Long tradeId) {
-        return tradeCache.getIfPresent(tradeId);
+    public Optional<Trade> getEntry(Long tradeId) throws ExecutionException {
+        return tradeCache.get(tradeId, () -> Optional.ofNullable(tradeRepository.findByTradeId(tradeId)));
     }
 
     @Scheduled(cron = "")
@@ -55,4 +60,5 @@ public class TradeCacheUtil {
         tradeCache.invalidateAll();
         initCache();
     }
+
 }
