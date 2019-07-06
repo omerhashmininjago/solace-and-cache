@@ -5,6 +5,145 @@
     <groupId>com.demonstrate.java</groupId>
     <artifactId>solace-and-cache</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <description>Parent pom for all modules; intended to keep common configuration for all modules
+        for instance, distribution manaement, plugin repos, build configuraion etc
+    </description>
+    <name>demonstrate-java-cache</name>
+    <scm>
+        <connection>https://github.com/omerhashmininjago/cache.git</connection>
+        <url>https://github.com/omerhashmininjago/cache</url>
+    </scm>
+    <distributionManagement>
+        <repository>
+            <id>releases</id>
+            <url></url>
+        </repository>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <url></url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <version>1.6.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <version>3.0.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>versions-maven-plugin</artifactId>
+                    <version>2.5</version>
+                    <configuration>
+                        <generateBackupPoms>false</generateBackupPoms>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.22.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>2.5.2</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>2.8.2</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>3.1.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.8.0</version>
+                    <configuration>
+                        <source>1.8</source>
+                        <target>1.8</target>
+                        <debug>true</debug>
+                        <debuglevel>lines,vars,source</debuglevel>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>3.1.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>3.1.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-scm-plugin</artifactId>
+                    <version>1.11.1</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.codehaus.plexus</groupId>
+                            <artifactId>plexus-utils</artifactId>
+                            <version>3.1.1</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.apache.maven.scm</groupId>
+                            <artifactId>maven-scm-provider-gitexe</artifactId>
+                            <version>1.11.1</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.1.1</version>
+                    <configuration>
+                        <archive>
+                            <manifest>
+                                <addClasspath>true</addClasspath>
+                                <packageName>${project.artifactId}</packageName>
+                            </manifest>
+                        </archive>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>3.0.1</version>
+                    <executions>
+                        <execution>
+                            <id>attach-sources</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>jar-no-fork</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>2.1.2.RELEASE</version>
+                </plugin>
+                <plugin>
+                    <groupId>pl.project13.maven</groupId>
+                    <artifactId>git-commit-id-plugin</artifactId>
+                    <version>2.2.6</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
     <modules>
         <module>solaceConnection</module>
         <module>ingestion</module>
@@ -12,22 +151,6 @@
         <module>exceptionHandling</module>
         <module>cacheLoader</module>
     </modules>
-
-    <packaging>pom</packaging>
-
-    <name>demonstrate-java-cache</name>
-
-    <scm>
-        <connection>https://github.com/omerhashmininjago/cache.git</connection>
-        <url>https://github.com/omerhashmininjago/cache</url>
-    </scm>
-
-    <parent>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <groupId>org.springframework.boot</groupId>
-        <version>2.1.2.RELEASE</version>
-        <relativePath/>
-    </parent>
 
     <properties>
         <java.version>1.8</java.version>
@@ -40,104 +163,107 @@
     </properties>
 
     <!-- Additional lines to be added here... -->
-
     <dependencyManagement>
-         <dependencies>
-             <dependency>
-                 <groupId>org.projectlombok</groupId>
-                 <artifactId>lombok</artifactId>
-                 <version>${lombok.version}</version>
-                 <scope>provided</scope>
-             </dependency>
-             <dependency>
-                 <groupId>com.solacesystems</groupId>
-                 <artifactId>sol-jcsmp</artifactId>
-                 <version>${solace.version}</version>
-             </dependency>
-             <dependency>
-                 <groupId>com.solacesystems</groupId>
-                 <artifactId>sol-jms</artifactId>
-                 <version>${solace.version}</version>
-             </dependency>
-             <dependency>
-                 <groupId>com.h2database</groupId>
-                 <artifactId>h2</artifactId>
-             </dependency>
-             <!-- https://mvnrepository.com/artifact/com.google.collections/google-collections -->
-             <dependency>
-                 <groupId>com.google.collections</groupId>
-                 <artifactId>google-collections</artifactId>
-                 <version>${google.collections.version}</version>
-             </dependency>
-             <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
-             <dependency>
-                 <groupId>com.google.guava</groupId>
-                 <artifactId>guava</artifactId>
-                 <version>${google.guava.version}</version>
-             </dependency>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>2.1.2.RELEASE</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>Camden.SR7</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.solacesystems</groupId>
+                <artifactId>sol-jcsmp</artifactId>
+                <version>10.6.3</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>commons-logging</artifactId>
+                        <groupId>commons-logging</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>com.solacesystems</groupId>
+                <artifactId>sol-jms</artifactId>
+                <version>10.6.3</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>commons-logging</artifactId>
+                        <groupId>commons-logging</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.9</version>
+            </dependency>
 
-
-             <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-dbcp2 -->
-             <dependency>
-                 <groupId>org.apache.commons</groupId>
-                 <artifactId>commons-dbcp2</artifactId>
-                 <version>${apace.commons.dbcp2.version}</version>
-             </dependency><!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
-
-             <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
-             <dependency>
-                 <groupId>org.apache.commons</groupId>
-                 <artifactId>commons-lang3</artifactId>
-                 <version>${apace.commons.lang3.version}</version>
-             </dependency>
-         </dependencies>
-     </dependencyManagement>
-
-    <dependencies>
-
-        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-devtools -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-autoconfigure</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-tomcat</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.tomcat</groupId>
-                    <artifactId>tomcat-jdbc</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
-
-    </dependencies>
-
-
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-log4j13</artifactId>
+                <version>1.0.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.solacesystems</groupId>
+                <artifactId>sol-jcsmp</artifactId>
+                <version>${solace.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.solacesystems</groupId>
+                <artifactId>sol-jms</artifactId>
+                <version>${solace.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.h2database</groupId>
+                <artifactId>h2</artifactId>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/com.google.collections/google-collections -->
+            <dependency>
+                <groupId>com.google.collections</groupId>
+                <artifactId>google-collections</artifactId>
+                <version>${google.collections.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${google.guava.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-dbcp2 -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-dbcp2</artifactId>
+                <version>${apace.commons.dbcp2.version}</version>
+            </dependency><!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+            <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${apace.commons.lang3.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.catalina</groupId>
+                <artifactId>com.springsource.org.apache.catalina</artifactId>
+                <version>7.0.26</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
     <profiles>
         <profile>
             <id>default</id>
@@ -146,6 +272,18 @@
             </activation>
             <build>
                 <plugins>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>build-info</goal>
+                                </goals>
+                                <phase>package</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-compiler-plugin</artifactId>
@@ -193,12 +331,13 @@
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
                         <version>0.7.1.201405082137</version>
-                        <executions><execution>
-                            <id>jacoco-initialize</id>
-                            <goals>
-                                <goal>prepare-agent</goal>
-                            </goals>
-                        </execution>
+                        <executions>
+                            <execution>
+                                <id>jacoco-initialize</id>
+                                <goals>
+                                    <goal>prepare-agent</goal>
+                                </goals>
+                            </execution>
                             <execution>
                                 <id>jacoco-site</id>
                                 <phase>verify</phase>
