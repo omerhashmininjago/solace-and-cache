@@ -160,6 +160,8 @@
         <apace.commons.dbcp2.version>2.1</apace.commons.dbcp2.version>
         <google.guava.version>26.0-jre</google.guava.version>
         <google.collections.version>1.0-rc2</google.collections.version>
+        <javax.servlet.version>3.0.1</javax.servlet.version>
+        <h2.version>1.4.197</h2.version>
     </properties>
 
     <!-- Additional lines to be added here... -->
@@ -207,7 +209,16 @@
                 <artifactId>commons-lang3</artifactId>
                 <version>3.9</version>
             </dependency>
-
+            <dependency>
+                <groupId>com.h2database</groupId>
+                <artifactId>h2</artifactId>
+                <version>${h2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>javax.servlet-api</artifactId>
+                <version>${javax.servlet.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-log4j13</artifactId>
