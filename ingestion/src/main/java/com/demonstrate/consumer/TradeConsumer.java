@@ -1,9 +1,7 @@
 package com.demonstrate.consumer;
 
 import com.demonstrate.service.TradeService;
-import com.solacesystems.jcsmp.BytesMessage;
 import com.solacesystems.jcsmp.Message;
-import com.solacesystems.jcsmp.TextMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

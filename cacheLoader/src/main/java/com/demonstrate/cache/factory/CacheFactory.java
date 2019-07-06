@@ -3,7 +3,6 @@ package com.demonstrate.cache.factory;
 import com.demonstrate.cache.loader.OptionalCacheLoader;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.LoadingCache;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
