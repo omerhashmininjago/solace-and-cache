@@ -10,7 +10,7 @@
 
     <parent>
         <groupId>com.demonstrate.java</groupId>
-        <artifactId>solace-and-cache</artifactId>
+        <artifactId>trade-event-store</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 

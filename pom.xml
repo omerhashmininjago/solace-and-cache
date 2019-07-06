@@ -3,13 +3,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.demonstrate.java</groupId>
-    <artifactId>solace-and-cache</artifactId>
+    <artifactId>trade-event-store</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <description>Parent pom for all modules; intended to keep common configuration for all modules
         for instance, distribution manaement, plugin repos, build configuraion etc
     </description>
-    <name>demonstrate-java-cache</name>
+    <name>trade-event-store</name>
     <scm>
         <connection>https://github.com/omerhashmininjago/cache.git</connection>
         <url>https://github.com/omerhashmininjago/cache</url>
