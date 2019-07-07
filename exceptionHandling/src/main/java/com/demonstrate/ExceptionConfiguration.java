@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 
 @ComponentScan
 @Configuration
-@ConditionalOnProperty(name = "exception.autoconfigure.enabled", matchIfMissing = true)
+@ConditionalOnProperty(name = "exception.autoconfigure.enabled",
+        matchIfMissing = true)
 public class ExceptionConfiguration {
 }

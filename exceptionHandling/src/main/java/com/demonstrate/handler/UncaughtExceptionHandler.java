@@ -9,7 +9,7 @@ public class UncaughtExceptionHandler implements Thread.UncaughtExceptionHandler
     private static final Logger LOG = LoggerFactory.getLogger(UncaughtExceptionHandler.class);
 
     @Override
-    public void uncaughtException(Thread t, Throwable e) {
+    public void uncaughtException(final Thread t, final Throwable e) {
         LOG.error("Uncaught exception occurred; thread {} :: exception {}", t.getName(), ExceptionUtils.getRootCauseMessage(e), e);
     }
 }

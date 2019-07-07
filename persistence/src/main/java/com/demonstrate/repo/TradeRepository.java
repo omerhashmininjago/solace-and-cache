@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TradeRepository extends JpaRepository<Trade, Long> {
 
-    Trade findByTradeId(Long tradeId);
+    Trade findByTradeId(final Long tradeId);
 }
 

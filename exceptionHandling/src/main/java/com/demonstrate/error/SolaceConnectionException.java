@@ -2,15 +2,15 @@ package com.demonstrate.error;
 
 public class SolaceConnectionException extends Exception {
 
-    public SolaceConnectionException(String message) {
+    public SolaceConnectionException(final String message) {
         super(message);
     }
 
-    public SolaceConnectionException(Throwable cause) {
+    public SolaceConnectionException(final Throwable cause) {
         super(cause);
     }
 
-    public SolaceConnectionException(String message, Throwable cause) {
+    public SolaceConnectionException(final String message, final Throwable cause) {
         super(message, cause);
     }
 }

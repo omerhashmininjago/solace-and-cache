@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ComponentScan
-@ConditionalOnProperty(name = "cache.autoconfigure.enabled", matchIfMissing = true)
+@ConditionalOnProperty(name = "cache.autoconfigure.enabled",
+        matchIfMissing = true)
 public class CacheConfiguration {
 }

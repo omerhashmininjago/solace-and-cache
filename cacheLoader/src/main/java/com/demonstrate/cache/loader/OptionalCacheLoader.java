@@ -11,7 +11,7 @@ public final class OptionalCacheLoader<K, V> extends CacheLoader<K, Optional<V>>
 
     private final Function<K, V> loadMethod;
 
-    public OptionalCacheLoader(Function<K, V> loadMethod) {
+    public OptionalCacheLoader(final Function<K, V> loadMethod) {
         Preconditions.checkNotNull(loadMethod);
         this.loadMethod = loadMethod;
     }

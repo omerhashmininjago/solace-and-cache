@@ -11,7 +11,10 @@ import java.util.function.Function;
 
 public final class CacheFactory {
 
-    public static <K, V> Cache<K, Optional<V>> createCache(Function<K, V> loadMethod, @Nonnull final int maxSize, @Nonnull final long duration, @Nonnull final TimeUnit unit) {
+    private CacheFactory() {
+    }
+
+    public static <K, V> Cache<K, Optional<V>> createCache(final Function<K, V> loadMethod, @Nonnull final int maxSize, @Nonnull final long duration, @Nonnull final TimeUnit unit) {
         return CacheBuilder.newBuilder()
                 .maximumSize(maxSize)
                 .expireAfterWrite(duration, unit)
