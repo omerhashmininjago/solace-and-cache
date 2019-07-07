@@ -2,7 +2,6 @@ package com.demonstrate.service;
 
 import com.demonstrate.cache.TradeCacheUtil;
 import com.demonstrate.domain.Trade;
-import com.demonstrate.error.AppException;
 import com.demonstrate.repo.TradeRepository;
 import lombok.RequiredArgsConstructor;
 import org.checkerframework.checker.nullness.qual.Nullable;

@@ -22,23 +22,24 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import static com.demonstrate.transformer.MessageToPayloadTransformer.MESSAGE_TO_PAYLOAD_TRANSFORMER;
+import static com.demonstrate.transformer.PayloadToObject.PAYLOAD_TO_OBJECT;
 
 @Component
 public class TradeMessageListener extends AbstractMessageListener implements Callable {
 
-    @Value("")
+    @Value("message.listener.concurrent.consumers")
     private int concurrentConsumers;
 
-    @Value("")
+    @Value("message.listener.source")
     private String destination;
 
-    @Value("")
+    @Value("message.transaction.istransacted")
     private boolean isTransacted;
 
-    @Value("")
+    @Value("message.transaction.isxatransacted")
     private boolean isXaTransacted;
 
-    @Value("")
+    @Value("message.transaction.iscachetransacted")
     private boolean isCacheTransacted;
 
     private final SolaceJscmpUtil solaceJscmpUtil;
@@ -46,7 +47,7 @@ public class TradeMessageListener extends AbstractMessageListener implements Cal
     private final TradeService tradeService;
 
     @Autowired
-    public TradeMessageListener(String destination, boolean isTransacted, boolean isXaTransacted, boolean isCacheTransacted, SolaceJscmpUtil solaceJscmpUtil, TradeService tradeService) {
+    public TradeMessageListener(SolaceJscmpUtil solaceJscmpUtil, TradeService tradeService) {
         super(destination, isTransacted, isXaTransacted, isCacheTransacted);
         this.solaceJscmpUtil = solaceJscmpUtil;
         this.tradeService = tradeService;
@@ -101,7 +102,7 @@ public class TradeMessageListener extends AbstractMessageListener implements Cal
     @Override
     public void consumeMessage(BytesXMLMessage msg) throws AppException {
         String payload = MESSAGE_TO_PAYLOAD_TRANSFORMER.getPayload(msg);
-        Trade trade = PayloadToObject.getObject(payload, Trade.class);
+        Trade trade = PAYLOAD_TO_OBJECT.getObject(payload, Trade.class);
         tradeService.processTrade(trade);
     }
 

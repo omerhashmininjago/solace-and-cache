@@ -19,13 +19,13 @@ import java.util.function.Function;
 @Component
 public class TradeCacheUtil {
 
-    @Value("")
+    @Value("cache.maxsize")
     private int maxSize;
 
-    @Value("")
+    @Value("cache.ttl")
     private long duration;
 
-    @Value("")
+    @Value("cache.ttl.unit")
     private String timeUnit;
 
     @Autowired

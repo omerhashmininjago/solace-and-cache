@@ -1,6 +1,7 @@
 package com.demonstrate.domain;
 
 import com.demonstrate.error.InvalidTradeException;
+import com.demonstrate.repo.TradeRepository;
 
 public enum TradeStatusType {
 

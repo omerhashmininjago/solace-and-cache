@@ -10,7 +10,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @ConditionalOnProperty(name = "persistence.autoconfigure.enabled",
         matchIfMissing = true)
 @Configuration
-@EnableAutoConfiguration
 @EntityScan
 @EnableJpaRepositories
 @ComponentScan

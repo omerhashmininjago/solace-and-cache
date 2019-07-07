@@ -9,13 +9,14 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "TRADE")
 @Getter
 @Setter
-public class Trade {
+public class Trade implements Serializable {
 
     @Id
     @Column(name = "TRADE_ID")

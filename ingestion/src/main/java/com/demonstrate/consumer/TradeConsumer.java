@@ -32,7 +32,5 @@ public class TradeConsumer {
                 Thread.interrupted();
             }
         }
-
     }
-
 }

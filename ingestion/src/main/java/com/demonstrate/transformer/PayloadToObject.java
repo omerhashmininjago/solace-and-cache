@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 
-public final class PayloadToObject<T> {
+public enum PayloadToObject {
+
+    PAYLOAD_TO_OBJECT;
 
     private final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
