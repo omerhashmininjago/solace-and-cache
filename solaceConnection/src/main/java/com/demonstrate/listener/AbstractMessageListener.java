@@ -1,5 +1,6 @@
 package com.demonstrate.listener;
 
+import com.demonstrate.error.AppException;
 import com.demonstrate.error.SolaceConnectionException;
 import com.solacesystems.jcsmp.BytesXMLMessage;
 import com.solacesystems.jcsmp.ConsumerFlowProperties;
@@ -71,7 +72,7 @@ public abstract class AbstractMessageListener {
      * @param endpointProperties
      * @throws SolaceConnectionException
      */
-    public void monitorQueue(JCSMPSession jcsmpSession, ConsumerFlowProperties flowProperties, EndpointProperties endpointProperties) throws SolaceConnectionException {
+    public void monitorQueue(JCSMPSession jcsmpSession, ConsumerFlowProperties flowProperties, EndpointProperties endpointProperties) {
         FlowReceiver cons = null;
         while (true) {
             try {

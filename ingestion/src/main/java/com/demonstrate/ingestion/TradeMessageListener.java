@@ -1,6 +1,7 @@
 package com.demonstrate.ingestion;
 
 import com.demonstrate.domain.Trade;
+import com.demonstrate.error.AppException;
 import com.demonstrate.error.SolaceConnectionException;
 import com.demonstrate.listener.AbstractMessageListener;
 import com.demonstrate.service.TradeService;
@@ -98,7 +99,7 @@ public class TradeMessageListener extends AbstractMessageListener implements Cal
     }
 
     @Override
-    public void consumeMessage(BytesXMLMessage msg) {
+    public void consumeMessage(BytesXMLMessage msg) throws AppException {
         String payload = MESSAGE_TO_PAYLOAD_TRANSFORMER.getPayload(msg);
         Trade trade = PayloadToObject.getObject(payload, Trade.class);
         tradeService.processTrade(trade);

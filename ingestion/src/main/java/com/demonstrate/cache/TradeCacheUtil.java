@@ -2,6 +2,7 @@ package com.demonstrate.cache;
 
 import com.demonstrate.cache.factory.CacheFactory;
 import com.demonstrate.domain.Trade;
+import com.demonstrate.error.AppException;
 import com.demonstrate.repo.TradeRepository;
 import com.google.common.cache.Cache;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,15 +43,19 @@ public class TradeCacheUtil {
     }
 
     public void addEntry(Trade trade) {
-        tradeCache.put(trade.getTradeId(), trade);
+        tradeCache.put(trade.getTradeId(), Optional.of(trade));
     }
 
     public void removeEntry(Trade trade) {
         tradeCache.invalidate(trade);
     }
 
-    public Optional<Trade> getEntry(Long tradeId) throws ExecutionException {
-        return tradeCache.get(tradeId, () -> Optional.ofNullable(tradeRepository.findByTradeId(tradeId)));
+    public Optional<Trade> getEntry(Long tradeId) throws AppException {
+        try {
+            return tradeCache.get(tradeId, () -> Optional.ofNullable(tradeRepository.findByTradeId(tradeId)));
+        } catch (ExecutionException e) {
+            throw new AppException(e);
+        }
     }
 
     @Scheduled(cron = "")
