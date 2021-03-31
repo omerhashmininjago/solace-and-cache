@@ -158,7 +158,7 @@
         <solace.version>[10,)</solace.version>
         <apace.commons.lang3.version>3.0</apace.commons.lang3.version>
         <apace.commons.dbcp2.version>2.1</apace.commons.dbcp2.version>
-        <google.guava.version>26.0-jre</google.guava.version>
+        <google.guava.version>29.0-jre</google.guava.version>
         <google.collections.version>1.0-rc2</google.collections.version>
         <javax.servlet.version>3.0.1</javax.servlet.version>
         <h2.version>1.4.197</h2.version>
